@@ -1,4 +1,5 @@
 ## Single-cell RNA-seq: age-associated pseudo-bulk differential expression.
+## Replace each YOUR_CODE_HERE expression, using the surrounding comments.
 
 library(Seurat)
 library(DESeq2)
@@ -20,14 +21,14 @@ stopifnot(all(required_columns %in% colnames(ovary[[]])))
 ## Define biological replicate groups ----------------------------------------
 
 cell_md <- ovary[[]]
-group_md <- unique(cell_md[, required_columns])
+group_md <- unique(cell_md[, YOUR_CODE_HERE])
 colnames(group_md) <- c("cell_type", "sample", "age")
 group_md <- group_md[order(group_md$cell_type, group_md$sample), ]
 group_md$pseudobulk_id <- sprintf("PB%03d", seq_len(nrow(group_md)))
 
-key <- paste(cell_md$cluster.names, cell_md$orig.ident, cell_md$age, sep = "\r")
+key <- paste(YOUR_CODE_HERE, YOUR_CODE_HERE, YOUR_CODE_HERE, sep = "\r")
 group_key <- paste(group_md$cell_type, group_md$sample, group_md$age, sep = "\r")
-ovary$pseudobulk_id <- group_md$pseudobulk_id[match(key, group_key)]
+ovary$pseudobulk_id <- group_md$pseudobulk_id[match(YOUR_CODE_HERE, YOUR_CODE_HERE)]
 stopifnot(!anyNA(ovary$pseudobulk_id))
 
 cell_counts <- table(ovary$pseudobulk_id)
@@ -42,7 +43,7 @@ table(group_md$age, group_md$sample)
 ## Aggregate raw counts -------------------------------------------------------
 
 aggregated <- AggregateExpression(
-  ovary, assays = "RNA", group.by = "pseudobulk_id", slot = "counts",
+  ovary, assays = "RNA", group.by = YOUR_CODE_HERE, slot = YOUR_CODE_HERE,
   return.seurat = FALSE, verbose = FALSE
 )$RNA
 aggregated <- round(aggregated)
@@ -69,11 +70,10 @@ fwrite(as.data.table(group_md), "results/tables/ovary_pseudobulk_samples.csv")
 
 cell_type_of_interest <- "Endothelium"
 minimum_cells <- 20L
-keep_samples <- group_md$cell_type == cell_type_of_interest &
-  group_md$n_cells >= minimum_cells
+keep_samples <- YOUR_CODE_HERE
 endo_counts <- aggregated[, keep_samples, drop = FALSE]
 endo_md <- droplevels(group_md[keep_samples, , drop = FALSE])
-endo_md$age <- relevel(factor(endo_md$age), ref = "YOUNG")
+endo_md$age <- relevel(factor(endo_md$age), ref = YOUR_CODE_HERE)
 
 if (ncol(endo_counts) < 4L || any(table(endo_md$age) < 2L)) {
   stop("Too few endothelial biological replicates remain for DESeq2.")
@@ -81,14 +81,14 @@ if (ncol(endo_counts) < 4L || any(table(endo_md$age) < 2L)) {
 table(endo_md$age)
 
 dds_endo <- DESeqDataSetFromMatrix(
-  countData = endo_counts, colData = endo_md, design = ~ age
+  countData = YOUR_CODE_HERE, colData = YOUR_CODE_HERE, design = YOUR_CODE_HERE
 )
 smallest_group <- min(table(dds_endo$age))
 dds_endo <- dds_endo[rowSums(counts(dds_endo) >= 10) >= smallest_group, ]
 dds_endo <- DESeq(dds_endo)
 resultsNames(dds_endo)
 
-endo_result <- results(dds_endo, contrast = c("age", "OLD", "YOUNG"), alpha = 0.05)
+endo_result <- results(dds_endo, contrast = YOUR_CODE_HERE, alpha = 0.05)
 endo_result <- as.data.table(endo_result, keep.rownames = "gene")
 endo_result[, regulation := classify_de(padj, log2FoldChange)]
 endo_result[, method := "pseudobulk_DESeq2"]
@@ -115,11 +115,12 @@ save_plot("ovary_endothelium_pseudobulk_volcano.png", p_pseudobulk)
 
 Idents(ovary) <- "cluster.names"
 endo_naive <- FindMarkers(
-  ovary, ident.1 = "OLD", ident.2 = "YOUNG", group.by = "age",
+  ovary, ident.1 = YOUR_CODE_HERE, ident.2 = YOUR_CODE_HERE,
+  group.by = YOUR_CODE_HERE,
   subset.ident = cell_type_of_interest, test.use = "wilcox", verbose = FALSE
 )
 endo_naive <- as.data.table(endo_naive, keep.rownames = "gene")
-endo_naive[, FDR := p.adjust(p_val, method = "BH")]
+endo_naive[, FDR := p.adjust(YOUR_CODE_HERE, method = YOUR_CODE_HERE)]
 endo_naive[, regulation := classify_de(FDR, avg_log2FC)]
 endo_naive[, method := "naive_cell_level_Wilcoxon"]
 

@@ -1,4 +1,5 @@
 ## Single-cell RNA-seq: explore the processed ovarian ageing Seurat object.
+## Replace each YOUR_CODE_HERE expression, using the surrounding comments.
 
 library(Seurat)
 library(ggplot2)
@@ -8,20 +9,20 @@ ovary_path <- "data/raw/GSE232309_age.combined.RDS.gz"
 require_file(ovary_path, "Run scripts/download_data.R first.")
 
 message("Loading the ovarian object; this can take a minute...")
-ovary <- readRDS(gzfile(ovary_path))
+ovary <- readRDS(YOUR_CODE_HERE)
 stopifnot(inherits(ovary, "Seurat"))
 
 ## Learn the object structure -------------------------------------------------
 
 ovary
-Assays(ovary)
-DefaultAssay(ovary)
-Layers(ovary[[DefaultAssay(ovary)]])
-Reductions(ovary)
-head(Cells(ovary))
-head(Features(ovary))
+YOUR_CODE_HERE
+YOUR_CODE_HERE
+YOUR_CODE_HERE
+YOUR_CODE_HERE
+head(YOUR_CODE_HERE)
+head(YOUR_CODE_HERE)
 
-cell_md <- ovary[[]]
+cell_md <- YOUR_CODE_HERE
 str(cell_md)
 
 required_columns <- c("cluster.names", "orig.ident", "age")
@@ -38,8 +39,8 @@ if (!all(required_columns %in% colnames(cell_md))) {
 
 ## Samples, ages, and cell types ---------------------------------------------
 
-table(cell_md$age, cell_md$orig.ident)
-sort(table(cell_md$cluster.names), decreasing = TRUE)
+table(YOUR_CODE_HERE, YOUR_CODE_HERE)
+sort(table(YOUR_CODE_HERE), decreasing = TRUE)
 sample_summary <- unique(cell_md[, c("orig.ident", "age")])
 sample_summary[order(sample_summary$age, sample_summary$orig.ident), ]
 
@@ -58,7 +59,7 @@ summary(cell_md[, qc_columns, drop = FALSE])
 
 if (all(c("nCount_RNA", "nFeature_RNA") %in% qc_columns)) {
   p_qc <- FeatureScatter(
-    ovary, feature1 = "nCount_RNA", feature2 = "nFeature_RNA"
+    ovary, feature1 = YOUR_CODE_HERE, feature2 = YOUR_CODE_HERE
   ) + theme_bw()
   print(p_qc)
   save_plot("ovary_qc_counts_vs_features.png", p_qc)
@@ -74,10 +75,10 @@ if (!"umap" %in% Reductions(ovary)) {
   stop("The expected UMAP reduction is absent from the downloaded object.")
 }
 p_cell_type <- DimPlot(
-  ovary, reduction = "umap", group.by = "cluster.names", label = TRUE,
+  ovary, reduction = "umap", group.by = YOUR_CODE_HERE, label = TRUE,
   repel = TRUE
 ) + NoLegend()
-p_age <- DimPlot(ovary, reduction = "umap", group.by = "age")
+p_age <- DimPlot(ovary, reduction = "umap", group.by = YOUR_CODE_HERE)
 print(p_cell_type)
 print(p_age)
 save_plot("ovary_umap_cell_types.png", p_cell_type, width = 10, height = 7)

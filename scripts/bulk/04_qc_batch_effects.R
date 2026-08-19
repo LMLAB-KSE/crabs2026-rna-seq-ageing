@@ -1,4 +1,5 @@
 ## Bulk RNA-seq: sample selection, filtering, QC, and batch effects.
+## Replace each YOUR_CODE_HERE expression, using the surrounding comments.
 
 library(DESeq2)
 library(ggplot2)
@@ -16,25 +17,23 @@ rse_senescence <- readRDS("data/derived/rse_senescence_annotated.rds")
 ## Select the biological comparison ------------------------------------------
 
 table(colData(rse_senescence)$sra_attribute.cell_type)
-rse_senescence <- rse_senescence[
-  , rse_senescence$sra_attribute.cell_type == "Primary epidermal keratinocytes"
-]
+rse_senescence <- rse_senescence[, YOUR_CODE_HERE]
 rse_senescence <- rse_senescence[, !is.na(rse_senescence$irr_day)]
 rse_senescence$irr_info <- droplevels(rse_senescence$irr_info)
 table(rse_senescence$irr_info)
 
 # DESeqDataSet() uses the assay named "counts" when constructed explicitly.
 dds_initial <- DESeqDataSetFromMatrix(
-  countData = round(assay(rse_senescence, "counts")),
-  colData = as.data.frame(colData(rse_senescence)),
-  design = ~ irr_info
+  countData = YOUR_CODE_HERE,
+  colData = YOUR_CODE_HERE,
+  design = YOUR_CODE_HERE
 )
 rowRanges(dds_initial) <- rowRanges(rse_senescence)
 
 ## Filter low-expression genes -----------------------------------------------
 
-smallest_group_size <- min(table(dds_initial$irr_info))
-keep <- rowSums(counts(dds_initial) >= 10) >= smallest_group_size
+smallest_group_size <- YOUR_CODE_HERE
+keep <- YOUR_CODE_HERE
 dds_initial <- dds_initial[keep, ]
 cat("Genes retained:", nrow(dds_initial), "\n")
 head(sort(table(rowRanges(dds_initial)$gene_type), decreasing = TRUE))
@@ -47,7 +46,7 @@ head(sort(table(rowRanges(dds_initial)$gene_type), decreasing = TRUE))
 
 # blind=TRUE prevents the experimental design from influencing the variance
 # trend. This is appropriate when using the transform for unbiased sample QC.
-vsd_initial <- vst(dds_initial, blind = TRUE)
+vsd_initial <- vst(dds_initial, blind = YOUR_CODE_HERE)
 pca_initial <- plotPCA(vsd_initial, intgroup = "irr_info", returnData = TRUE)
 percent_var <- round(100 * attr(pca_initial, "percentVar"))
 
@@ -83,7 +82,7 @@ dev.off()
 # by two researchers. In this dataset PC2 separates those batches. We use the
 # sign of PC2 to reproduce the documented labels, while checking sample order.
 stopifnot(identical(rownames(pca_initial), colnames(rse_senescence)))
-rse_senescence$batch <- factor(ifelse(pca_initial$PC2 < 0, "A", "B"))
+rse_senescence$batch <- factor(YOUR_CODE_HERE)
 table(rse_senescence$irr_info, rse_senescence$batch)
 
 # DISCUSS:
@@ -93,7 +92,7 @@ table(rse_senescence$irr_info, rse_senescence$batch)
 dds_senescence <- DESeqDataSetFromMatrix(
   countData = round(assay(rse_senescence, "counts")),
   colData = as.data.frame(colData(rse_senescence)),
-  design = ~ batch + irr_info
+  design = YOUR_CODE_HERE
 )
 rowRanges(dds_senescence) <- rowRanges(rse_senescence)
 dds_senescence <- dds_senescence[keep, ]

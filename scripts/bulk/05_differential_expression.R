@@ -1,4 +1,5 @@
 ## Bulk RNA-seq: batch-adjusted differential expression with DESeq2.
+## Replace each YOUR_CODE_HERE expression, using the surrounding comments.
 
 library(DESeq2)
 library(apeglm)
@@ -17,9 +18,9 @@ dds_senescence <- readRDS("data/derived/dds_senescence.rds")
 
 ## Fit the model --------------------------------------------------------------
 
-dds_senescence$irr_info <- relevel(dds_senescence$irr_info, ref = "Proliferating")
-design(dds_senescence) <- ~ batch + irr_info
-dds_senescence <- DESeq(dds_senescence)
+dds_senescence$irr_info <- relevel(YOUR_CODE_HERE, ref = YOUR_CODE_HERE)
+design(dds_senescence) <- YOUR_CODE_HERE
+dds_senescence <- YOUR_CODE_HERE
 resultsNames(dds_senescence)
 
 png("results/figures/bulk_dispersion_estimates.png", width = 1200, height = 900, res = 150)
@@ -36,18 +37,15 @@ time_points <- c("Post_IR_4", "Post_IR_10", "Post_IR_20")
 deg_tables <- lapply(time_points, function(time_point) {
   coefficient <- paste0("irr_info_", time_point, "_vs_Proliferating")
   stopifnot(coefficient %in% resultsNames(dds_senescence))
-  result <- results(
-    dds_senescence,
-    contrast = c("irr_info", time_point, "Proliferating"), alpha = 0.05
-  )
+  result <- results(dds_senescence, contrast = YOUR_CODE_HERE, alpha = 0.05)
   result <- lfcShrink(
-    dds_senescence, coef = coefficient, res = result, type = "apeglm"
+    dds_senescence, coef = YOUR_CODE_HERE, res = result, type = "apeglm"
   )
   table <- as.data.table(result, keep.rownames = "gene_id")
   table[, gene_name := rowRanges(dds_senescence)$gene_name]
   table[, gene_type := rowRanges(dds_senescence)$gene_type]
   table[, time_point := time_point]
-  table[, regulation := classify_de(padj, log2FoldChange)]
+  table[, regulation := classify_de(YOUR_CODE_HERE, YOUR_CODE_HERE)]
   table
 })
 deg <- rbindlist(deg_tables)

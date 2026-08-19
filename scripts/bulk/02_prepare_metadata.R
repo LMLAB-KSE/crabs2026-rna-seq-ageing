@@ -1,4 +1,5 @@
 ## Bulk RNA-seq: inspect and complete sample metadata.
+## Replace each YOUR_CODE_HERE expression, using the surrounding comments.
 
 library(recount3)
 source("scripts/helpers.R")
@@ -18,7 +19,7 @@ rse_senescence <- readRDS("data/derived/rse_senescence.rds")
 
 metadata(rse_senescence)$recount3_version
 metadata(rse_senescence)$annotation
-sample_md <- as.data.frame(colData(rse_senescence))
+sample_md <- as.data.frame(YOUR_CODE_HERE)
 table(sample_md$sra.library_selection, useNA = "ifany")
 mean(sample_md[["recount_qc.star.%_mapped_reads_both"]], na.rm = TRUE)
 
@@ -28,7 +29,7 @@ mean(sample_md[["recount_qc.star.%_mapped_reads_both"]], na.rm = TRUE)
 
 ## Expand SRA attributes ------------------------------------------------------
 
-rse_senescence <- expand_sra_attributes(rse_senescence)
+rse_senescence <- YOUR_CODE_HERE
 table(colData(rse_senescence)$sra_attribute.cell_type, useNA = "ifany")
 
 # Cell type is now available, but irradiation state is still missing. The EBI
@@ -59,15 +60,15 @@ raw_irradiation <- ebi_md$Factor.Value.irradiate.
 if (!all(raw_irradiation %in% names(label_map))) {
   stop("The SDRF contains an unexpected irradiation label.")
 }
-ebi_md$irr_info <- unname(label_map[raw_irradiation])
-ebi_md$irr_day <- unname(day_map[raw_irradiation])
+ebi_md$irr_info <- unname(label_map[YOUR_CODE_HERE])
+ebi_md$irr_day <- unname(day_map[YOUR_CODE_HERE])
 
 ## Match metadata explicitly -------------------------------------------------
 
 ebi_md <- unique(ebi_md[, c("Source.Name", "irr_info", "irr_day")])
 ebi_md$sample_id <- paste0("E-MTAB-5403:", ebi_md$Source.Name)
 rse_ids <- colData(rse_senescence)$sra_attribute.Alias
-matched_rows <- match(rse_ids, ebi_md$sample_id)
+matched_rows <- match(YOUR_CODE_HERE, YOUR_CODE_HERE)
 
 if (anyNA(matched_rows) || anyDuplicated(ebi_md$sample_id)) {
   stop("Sample metadata could not be matched one-to-one.")
@@ -76,10 +77,10 @@ ebi_md <- ebi_md[matched_rows, ]
 stopifnot(identical(ebi_md$sample_id, rse_ids))
 
 colData(rse_senescence)$irr_info <- factor(
-  ebi_md$irr_info,
+  YOUR_CODE_HERE,
   levels = c("Proliferating", "Post_IR_4", "Post_IR_10", "Post_IR_20", "Quiescent")
 )
-colData(rse_senescence)$irr_day <- ebi_md$irr_day
+colData(rse_senescence)$irr_day <- YOUR_CODE_HERE
 table(colData(rse_senescence)$irr_info, useNA = "ifany")
 
 # DISCUSS:

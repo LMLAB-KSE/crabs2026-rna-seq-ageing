@@ -1,4 +1,5 @@
 ## Optional bulk RNA-seq extension: Gene Ontology over-representation.
+## Replace each YOUR_CODE_HERE expression, using the surrounding comments.
 
 library(data.table)
 library(clusterProfiler)
@@ -19,14 +20,14 @@ deg <- readRDS("data/derived/bulk_de_results.rds")
 # We examine genes that are significant in at least one post-irradiation
 # contrast. The universe contains all tested genes with a valid symbol, not the
 # whole genome.
-universe <- unique(na.omit(deg$gene_name))
-up_genes <- unique(na.omit(deg[regulation == "UP"]$gene_name))
-down_genes <- unique(na.omit(deg[regulation == "DOWN"]$gene_name))
+universe <- unique(na.omit(YOUR_CODE_HERE))
+up_genes <- unique(na.omit(YOUR_CODE_HERE))
+down_genes <- unique(na.omit(YOUR_CODE_HERE))
 
 run_go <- function(genes) {
   enrichGO(
-    gene = genes, universe = universe, OrgDb = org.Hs.eg.db,
-    keyType = "SYMBOL", ont = "BP", pAdjustMethod = "BH",
+    gene = YOUR_CODE_HERE, universe = YOUR_CODE_HERE, OrgDb = YOUR_CODE_HERE,
+    keyType = YOUR_CODE_HERE, ont = "BP", pAdjustMethod = "BH",
     pvalueCutoff = 0.05, qvalueCutoff = 0.2, readable = TRUE
   )
 }
