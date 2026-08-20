@@ -9,7 +9,7 @@ ovary_path <- "data/raw/GSE232309_age.combined.RDS.gz"
 require_file(ovary_path, "Run scripts/download_data.R first.")
 
 message("Loading the ovarian object; this can take a minute...")
-ovary <- readRDS(YOUR_CODE_HERE)
+ovary <- read_nested_gzip_rds(ovary_path)
 stopifnot(inherits(ovary, "Seurat"))
 
 ## Learn the object structure -------------------------------------------------
