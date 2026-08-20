@@ -4,9 +4,8 @@ This repository contains a hands-on introduction to differential expression in
 bulk and single-cell RNA-seq. The examples use an irradiation-induced cellular
 senescence study and a mouse ovarian ageing atlas.
 
-The material is a tutorial, not a graded assignment. Pause at the `DISCUSS`
-prompts, inspect the output, and choose how much code you want to complete
-yourself:
+Pause at the `DISCUSS` prompts, inspect the output, and choose how much code you
+want to complete yourself:
 
 - `main` contains the complete, runnable workflow.
 - `exercises` contains the same explanations with selected code replaced by
@@ -18,8 +17,8 @@ ignored by Git and remain available after switching.
 ## Before the workshop
 
 Use a computer with at least 16 GB RAM and approximately 10 GB free disk space.
-Install R 4.5.x and RStudio Desktop (recommended), then follow the operating-
-system requirements in [setup/README.md](setup/README.md).
+Install R 4.5.x and RStudio Desktop (recommended), then follow the operating-system
+requirements in [setup/README.md](setup/README.md).
 
 Clone this repository, open `crabs2026-rna-seq-ageing.Rproj`, and run:
 
