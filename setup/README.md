@@ -1,12 +1,18 @@
 # Installation guide
 
-The supported configuration is R 4.5.x on Windows 11, recent macOS, or a recent
-Ubuntu/Debian release. RStudio Desktop is recommended. Package versions are
-recorded in `renv.lock`.
+The supported configurations are R 4.5.x and R 4.6.x on Windows 11, recent
+macOS, or a recent Ubuntu/Debian release. RStudio Desktop or VS Code with its R
+extension can be used. Package versions are recorded in two compatible `renv`
+lockfiles:
+
+- R 4.5.x uses Bioconductor 3.22 and `renv.lock.R-4.5`.
+- R 4.6.x uses Bioconductor 3.23 and `renv.lock`.
+
+The setup script detects the running R version and selects the matching file.
 
 ## Windows 11
 
-1. Install R 4.5.x from <https://cran.r-project.org/bin/windows/base/>.
+1. Install R 4.5.x or R 4.6.x from <https://cran.r-project.org/bin/windows/base/>.
 2. Install RStudio Desktop from <https://posit.co/download/rstudio-desktop/>.
 3. Install the matching Rtools release from
    <https://cran.r-project.org/bin/windows/Rtools/>. Accept the default options.
@@ -17,7 +23,7 @@ must be compiled from source.
 
 ## macOS
 
-1. Install R 4.5.x from <https://cran.r-project.org/bin/macosx/>. Choose the
+1. Install R 4.5.x or R 4.6.x from <https://cran.r-project.org/bin/macosx/>. Choose the
    installer matching Apple silicon or Intel.
 2. Install RStudio Desktop.
 3. In Terminal, install Apple's command-line tools:
@@ -31,7 +37,7 @@ compiler listed on the CRAN R for macOS tools page.
 
 ## Ubuntu or Debian
 
-Install R 4.5.x using the CRAN instructions for your distribution, then install
+Install R 4.5.x or R 4.6.x using the CRAN instructions for your distribution, then install
 common compilation and graphics libraries:
 
 ```bash
@@ -53,8 +59,9 @@ Open the project from its root and run:
 source("scripts/setup.R")
 ```
 
-This installs `renv` if needed and restores packages from `renv.lock`. Do not
-install workshop packages one by one unless troubleshooting.
+This detects R 4.5 or 4.6, installs `renv` if needed, and restores the matching
+R and Bioconductor package versions. Do not install workshop packages one by
+one unless troubleshooting. Other R versions stop with an actionable message.
 
 Then verify the environment and download the source data:
 
@@ -66,8 +73,10 @@ source("scripts/check_setup.R")
 
 ## Common problems
 
-- **The project uses the wrong R version:** install R 4.5.x, restart RStudio,
-  and select it under *Tools > Global Options > General > R version*.
+- **The project uses the wrong R version:** install R 4.5.x or 4.6.x, restart
+  the editor, and select the intended R executable. In RStudio this is under
+  *Tools > Global Options > General > R version*; in VS Code, check the R
+  extension settings and the `R` executable on `PATH`.
 - **A package cannot compile:** read the first `configuration failed` or
   `library not found` message, install that system dependency, and rerun setup.
 - **The ovarian download stops:** rerun `download_data.R`; a suspicious partial

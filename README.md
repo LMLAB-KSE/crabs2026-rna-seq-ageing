@@ -17,8 +17,9 @@ ignored by Git and remain available after switching.
 ## Before the workshop
 
 Use a computer with at least 16 GB RAM and approximately 10 GB free disk space.
-Install R 4.5.x and RStudio Desktop (recommended), then follow the operating-system
-requirements in [setup/README.md](setup/README.md).
+Install R 4.5.x or R 4.6.x and RStudio Desktop or VS Code, then follow the
+operating-system requirements in [setup/README.md](setup/README.md). Setup
+automatically selects Bioconductor 3.22 for R 4.5 or 3.23 for R 4.6.
 
 Clone this repository, open `crabs2026-rna-seq-ageing.Rproj`, and run:
 
