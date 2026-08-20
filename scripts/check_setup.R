@@ -31,18 +31,35 @@ if (is.na(selected_lockfile) || !file.exists(selected_lockfile)) {
   cat("[ OK ] Selected lockfile: ", selected_lockfile, ".\n", sep = "")
   if (requireNamespace("renv", quietly = TRUE)) {
     lock <- renv::lockfile_read(selected_lockfile)
-    lock_r <- sub("^([0-9]+\\.[0-9]+).*$", "\\1", lock$R$Version)
+    lock_r <- sub("^([0-9]+\\.[0-9]+).*$", "\\1", as.character(lock$R$Version))
+    lock_bioc <- if (is.null(lock$Bioconductor$Version)) {
+      NA_character_
+    } else {
+      as.character(lock$Bioconductor$Version)
+    }
     if (identical(lock_r, current_r) &&
-        identical(lock$Bioconductor$Version, environment$bioconductor)) {
+        identical(lock_bioc, environment$bioconductor)) {
       cat("[ OK ] Lockfile R and Bioconductor versions match.\n")
     } else {
-      cat("[FAIL] Lockfile version metadata does not match this R session.\n")
+      cat(
+        "[FAIL] Lockfile metadata mismatch: found R ", lock_r,
+        " / Bioconductor ", ifelse(is.na(lock_bioc), "not recorded", lock_bioc),
+        "; expected R ", current_r, " / Bioconductor ",
+        environment$bioconductor, ".\n", sep = ""
+      )
     }
   }
 }
 
 check_packages <- function(packages, required) {
-  installed <- vapply(packages, requireNamespace, logical(1), quietly = TRUE)
+  # Some compatible Bioconductor packages emit namespace replacement warnings
+  # while loading. They are not installation failures, so keep this diagnostic
+  # focused on whether each namespace can be loaded successfully.
+  installed <- vapply(
+    packages,
+    function(package) suppressWarnings(requireNamespace(package, quietly = TRUE)),
+    logical(1)
+  )
   label <- if (required) "required" else "optional GO"
   if (all(installed)) {
     cat("[ OK ] All ", label, " packages are installed.\n", sep = "")
