@@ -11,7 +11,7 @@ ovary_path <- "data/raw/GSE232309_age.combined.RDS.gz"
 require_file(ovary_path, "Run scripts/download_data.R first.")
 
 message("Loading the ovarian object; this can take a minute...")
-ovary <- readRDS(gzfile(ovary_path))
+ovary <- read_nested_gzip_rds(ovary_path)
 DefaultAssay(ovary) <- "RNA"
 
 required_columns <- c("cluster.names", "orig.ident", "age")

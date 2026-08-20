@@ -13,8 +13,10 @@ The script retrieves:
 - `GSE232309_age.combined.RDS.gz`: the processed mouse ovarian ageing Seurat
   object from [GSE232309](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE232309).
 
-The ovarian file stays compressed. R reads it directly with
-`readRDS(gzfile(...))`, avoiding a second multi-gigabyte copy.
+The ovarian download has two gzip layers: the submitted RDS was compressed and
+GEO added a second `.gz` wrapper. The workshop helper reads both layers directly,
+avoiding a second approximately 1 GB copy on disk. Use the single-cell scripts
+rather than calling `readRDS(gzfile(...))` yourself.
 
 Files in `data/raw/` and `data/derived/` are intentionally excluded from Git.
 The analysis scripts create derived checkpoints when needed.
