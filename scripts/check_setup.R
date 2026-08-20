@@ -1,6 +1,9 @@
 ## Diagnose the local R environment and downloaded data.
 
-required_r <- "4.5"
+supported_environments <- list(
+  "4.5" = list(lockfile = "renv.lock.R-4.5", bioconductor = "3.22"),
+  "4.6" = list(lockfile = "renv.lock", bioconductor = "3.23")
+)
 core_packages <- c(
   "recount3", "DESeq2", "apeglm", "Seurat", "data.table",
   "ggplot2", "ggrepel", "pheatmap", "RColorBrewer", "ComplexUpset"
@@ -13,16 +16,29 @@ cat("R version: ", as.character(getRversion()), "\n", sep = "")
 cat("Platform:  ", R.version$platform, "\n", sep = "")
 
 current_r <- paste(R.version$major, strsplit(R.version$minor, "\\.")[[1]][1], sep = ".")
-if (!identical(current_r, required_r)) {
-  cat("[WARN] Expected R 4.5.x.\n")
+environment <- supported_environments[[current_r]]
+if (is.null(environment)) {
+  cat("[FAIL] Unsupported R version. Use R 4.5.x or R 4.6.x.\n")
 } else {
-  cat("[ OK ] Supported R version.\n")
+  cat("[ OK ] Supported R version; expected Bioconductor ",
+      environment$bioconductor, ".\n", sep = "")
 }
 
-if (!file.exists("renv.lock")) {
-  cat("[FAIL] renv.lock is missing; are you in the repository root?\n")
+selected_lockfile <- if (is.null(environment)) NA_character_ else environment$lockfile
+if (is.na(selected_lockfile) || !file.exists(selected_lockfile)) {
+  cat("[FAIL] Compatible lockfile is missing; are you in the repository root?\n")
 } else {
-  cat("[ OK ] renv.lock found.\n")
+  cat("[ OK ] Selected lockfile: ", selected_lockfile, ".\n", sep = "")
+  if (requireNamespace("renv", quietly = TRUE)) {
+    lock <- renv::lockfile_read(selected_lockfile)
+    lock_r <- sub("^([0-9]+\\.[0-9]+).*$", "\\1", lock$R$Version)
+    if (identical(lock_r, current_r) &&
+        identical(lock$Bioconductor$Version, environment$bioconductor)) {
+      cat("[ OK ] Lockfile R and Bioconductor versions match.\n")
+    } else {
+      cat("[FAIL] Lockfile version metadata does not match this R session.\n")
+    }
+  }
 }
 
 check_packages <- function(packages, required) {
