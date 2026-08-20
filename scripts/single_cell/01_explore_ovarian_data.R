@@ -52,10 +52,21 @@ sample_summary[order(sample_summary$age, sample_summary$orig.ident), ]
 ## Inspect QC information ----------------------------------------------------
 
 qc_columns <- intersect(
-  c("nCount_RNA", "nFeature_RNA", "percent.mt", "percent.mt_RNA"),
+  c("nCount_RNA", "nFeature_RNA", "percent.mito", "percent.mt", "percent.mt_RNA"),
   colnames(cell_md)
 )
 summary(cell_md[, qc_columns, drop = FALSE])
+
+if (length(qc_columns) > 0L) {
+  p_qc_distributions <- VlnPlot(
+    ovary, features = qc_columns, ncol = length(qc_columns), pt.size = 0
+  )
+  print(p_qc_distributions)
+  save_plot(
+    "ovary_qc_distributions.png", p_qc_distributions,
+    width = 4 * length(qc_columns), height = 5
+  )
+}
 
 if (all(c("nCount_RNA", "nFeature_RNA") %in% qc_columns)) {
   p_qc <- FeatureScatter(
