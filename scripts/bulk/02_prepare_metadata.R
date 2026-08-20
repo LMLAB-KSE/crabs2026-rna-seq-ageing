@@ -20,7 +20,7 @@ metadata(rse_senescence)$recount3_version
 metadata(rse_senescence)$annotation
 sample_md <- as.data.frame(colData(rse_senescence))
 table(sample_md$sra.library_selection, useNA = "ifany")
-mean(sample_md[["recount_qc.star.%_mapped_reads_both"]], na.rm = TRUE)
+mean(sample_md[["recount_qc.star.._mapped_reads_both"]], na.rm = TRUE)
 
 # DISCUSS:
 # Which genome annotation, RNA-selection method, and aligner were used?
