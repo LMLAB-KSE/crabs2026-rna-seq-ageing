@@ -78,5 +78,4 @@ valid downloads are not repeated.
 
 Run `source("scripts/check_setup.R")` first. It reports missing packages, data,
 and common platform problems. See [setup/README.md](setup/README.md) for detailed
-OS-specific guidance and [`INSTRUCTOR_NOTES.md`](INSTRUCTOR_NOTES.md) for
-teaching suggestions.
+OS-specific guidance.
