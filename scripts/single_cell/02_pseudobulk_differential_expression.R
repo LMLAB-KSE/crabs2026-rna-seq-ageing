@@ -115,9 +115,16 @@ save_plot("ovary_endothelium_pseudobulk_volcano.png", p_pseudobulk)
 
 Idents(ovary) <- "cluster.names"
 endo_naive <- FindMarkers(
-  ovary, ident.1 = YOUR_CODE_HERE, ident.2 = YOUR_CODE_HERE,
+  ovary,
+  ident.1 = YOUR_CODE_HERE,
+  ident.2 = YOUR_CODE_HERE,
   group.by = YOUR_CODE_HERE,
-  subset.ident = cell_type_of_interest, test.use = "wilcox", verbose = FALSE
+  subset.ident = cell_type_of_interest,
+  features = rownames(dds_endo),
+  min.pct = 0,
+  logfc.threshold = 0,
+  test.use = "wilcox",
+  verbose = FALSE
 )
 endo_naive <- as.data.table(endo_naive, keep.rownames = "gene")
 endo_naive[, FDR := p.adjust(YOUR_CODE_HERE, method = YOUR_CODE_HERE)]
